@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "486770876915",
+    "project_id": "firebase-pdfmaker"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486770876915:android:d29d83cb60aed6f3",
+        "android_client_info": {
+          "package_name": "pdf.example.com.pdf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "486770876915-p6fgnkumnpnqsnln46558bqp5r88fv6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pdf.example.com.pdf",
+            "certificate_hash": "dfe8e15bf1fc0958bde3725831b95b5a40e33b3a"
+          }
+        },
+        {
+          "client_id": "486770876915-a571kdqi4idbgb40omotep8l3acc61r2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbtYH3nbTu1P9ayAzl2LwhR10GbMXbTmU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
