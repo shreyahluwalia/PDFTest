@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,13 +37,26 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PdfFormField;
+import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.TextField;
+import com.itextpdf.*;
 import com.itextpdf.text.List;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfAWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,6 +67,8 @@ import java.util.Map;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.pdftron.common.PDFNetException;
+import com.pdftron.pdf.PDFDoc;
 import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import static com.itextpdf.text.Annotation.FILE;
@@ -113,6 +129,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
+
                             EditText fileName = (EditText) layout.findViewById(R.id.file);
                             try {
 
@@ -156,12 +173,18 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
             try {
 
-                PdfWriter.getInstance(doc, new FileOutputStream(outpath));
+                PdfWriter pdfw = PdfWriter.getInstance(doc, new FileOutputStream(outpath));
 
                 doc.open();
                 doc.addCreationDate();
                 doc.addTitle("Test App");
-                doc.add(new Paragraph("Test App Test"));
+//                Rectangle rect = new Rectangle(
+//                        doc.get - 90f, 830f,
+//                        doc.PageSize.Width - 40f, 880f);
+                TextField tf = new TextField(pdfw, doc.getPageSize(), "text");
+                tf.setOptions(TextField.MULTILINE);
+
+                pdfw.addAnnotation(tf.getTextField());
                 doc.close();
 
             } catch (FileNotFoundException e) {
@@ -170,6 +193,9 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             } catch (DocumentException e) {
 // TODO Auto-generated catch block
                 e.printStackTrace();
+            }
+            catch (IOException x){
+                x.printStackTrace();
             }
         }
 
@@ -195,24 +221,24 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         profileEmail.setText(profileUserEmail);
         ListView FileView = (ListView) findViewById(R.id.listActivity);
 
+
         try{
-            FileViewAdapter adapter = new FileViewAdapter(this, ReadPDFDirectory());
+            FileViewAdapter adapter = new FileViewAdapter(this,ReadPDFDirectory());
             FileView.setAdapter(adapter);
             FileView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
                 public void onItemClick(AdapterView<?>adapter,View v, int position, long x){
-
-                    Intent intent = new Intent(Intent.ACTION_VIEW,
+//
+                    Intent intent = new Intent(getApplicationContext(), PTTestActivity.class);
+                    Intent s = new Intent(Intent.ACTION_VIEW,
                             Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/PDFs/" + adapter.getItemAtPosition(position).toString()));
-                    intent.setType("application/pdf");
-                    PackageManager pm = getPackageManager();
-                    java.util.List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
-                    if (activities.size() > 0) {
+
+                    String path = Environment.getExternalStorageDirectory().getPath() + "/PDFs/" + adapter.getItemAtPosition(position).toString();
+
+                        intent.putExtra("file", path);
                         startActivity(intent);
                         Toast.makeText(getApplicationContext(),"OPENING PDF", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(),"ERROR NOT OPENING PDF", Toast.LENGTH_SHORT).show();
-                    }
+
                 }
             });
         }
@@ -265,29 +291,32 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_create){
+        if (id == R.id.action_create) {
             android.app.FragmentManager fragmentManager = getFragmentManager();
             DialogFragment newFragment = new FileCreate();
             newFragment.show(fragmentManager, "pdf");
             ListView FileView = (ListView) findViewById(R.id.listActivity);
-            FileView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            FileView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                public void onItemClick(AdapterView<?>adapter,View v, int position, long x){
+                public void onItemClick(AdapterView<?> adapter, View v, int position, long x) {
+//
+//
 
-                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Intent intent = new Intent(getApplicationContext(), PTTestActivity.class);
+                    Intent s = new Intent(Intent.ACTION_VIEW,
                             Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/PDFs/" + adapter.getItemAtPosition(position).toString()));
-                    intent.setType("application/pdf");
-                    PackageManager pm = getPackageManager();
-                    java.util.List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
-                    if (activities.size() > 0) {
+                    String path = Environment.getExternalStorageDirectory().getPath() + "/PDFs/" + adapter.getItemAtPosition(position).toString();
+                    {
+                        intent.putExtra("file", path);
                         startActivity(intent);
-                        Toast.makeText(getApplicationContext(),"OPENING PDF", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(),"ERROR NOT OPENING PDF", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "OPENING PDF", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
+
+
+
         if (id == R.id.action_logout) {
             Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                    new ResultCallback<Status>() {

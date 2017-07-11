@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "pdf.example.com.pdf"
         minSdkVersion 23
@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -17,6 +18,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        arm {
+            ndk {
+                abiFilters "armeabi"
+            }
+        }
+        armv7a {
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+        }
+        armv8 {
+            ndk {
+                abiFilters "arm64-v8a"
+            }
+        }
+        x86 {
+            ndk {
+                abiFilters "x86"
+            }
+        }
+        x86_64 {
+            ndk {
+                abiFilters "x86_64"
+            }
+        }
+        dev {
+            ndk {
+                abiFilters "armeabi-v7a", "arm64-v8a", "x86"
+            }
+            minSdkVersion 23
+        }
+    }
+
 }
 
 dependencies {
@@ -36,5 +71,9 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
     compile 'com.itextpdf:itext-pdfa:5.5.11'
     compile 'com.itextpdf:itextpdf:5.5.6'
+    compile 'es.voghdev.pdfviewpager:library:1.0.2'
+    compile name:'PDFViewCtrlTools', ext:'aar'
+    compile name:'FloatingActionButton', ext:'aar'
+    compile name:'PageCropper', ext:'aar'
 }
 apply plugin: 'com.google.gms.google-services'
